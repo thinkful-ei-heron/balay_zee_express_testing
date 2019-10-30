@@ -76,4 +76,18 @@ describe('GET /apps', () => {
         expect(sorted).to.be.true;
       });
   });
+
+  it('should return 400 status if genres is Invalid', () => {
+    return supertest(app)
+      .get('/apps')
+      .query({ genres: 'Invalid' })
+      .expect(400, 'Genre filter must be by Action Puzzle Strategy Casual Arcade Card');
+  });
+
+  it('should return 400 status if sort is Invalid', () => {
+    return supertest(app)
+      .get('/apps')
+      .query({ sort: 'Invalid'})
+      .expect(400, 'Sort must be either rating or app');
+  });
 });
