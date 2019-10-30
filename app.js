@@ -11,9 +11,26 @@ app.get('/apps', (req, res) => {
   let filtered = [...store];
 
   const validSortTypes = ['Rating', 'App'];
-  const validGenres = ['action', 'puzzle', 'strategy', 'casual', 'arcade', 'card'];
+  const validGenres = ['Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card'];
+  let filter = '';
+  let sort = '';
+  
 
-  const sort = req.query.sort.charAt(0).toUpperCase() + req.query.sort.slice(1);
+  if(req.query.genres) {
+    filter = req.query.genres.charAt(0).toUpperCase() + req.query.genres.slice(1);
+  }
+
+  if(req.query.sort) {
+    sort = req.query.sort.charAt(0).toUpperCase() + req.query.sort.slice(1);
+  }
+
+  if (req.query.genres && (!validGenres.includes(filter))){
+    return res.status(400).send(`Genre filter must be by ${validGenres.join(' ')}`);
+  }
+
+  if(filter) {
+    filtered = filtered.filter(app => app.Genres.includes(filter));
+  }
 
   if (req.query.sort && (!validSortTypes.includes(sort))) {
     return res.status(400).send('Sort must be either rating or app');
@@ -27,6 +44,4 @@ app.get('/apps', (req, res) => {
   res.json(filtered);
 });
 
-app.listen(8000, () => {
-  console.log('listening!');
-});
+module.exports = app;
